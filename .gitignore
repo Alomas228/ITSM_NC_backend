@@ -1,8 +1,45 @@
-**/bin/
-**/obj/
+# Файлы Visual Studio и локальные настройки
 .vs/
 .backups/
 *.user
 appsettings.Local.json
 **/.keys/
 **/.pgdata/
+.env
+
+# Результаты сборки
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+
+# Служебные файлы .NET и NuGet
+project.lock.json
+project.fragment.lock.json
+ScaffoldingReadMe.txt
+*.nupkg
+*.snupkg
+
+# Временные файлы и журналы сборки
+~$*
+*~
+*.binlog
+
+# Результаты тестов и покрытия кода
+CodeCoverage/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
