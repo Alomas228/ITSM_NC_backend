@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+.vs/
+.backups/
+*.user
+appsettings.Local.json
+**/.keys/
+**/.pgdata/

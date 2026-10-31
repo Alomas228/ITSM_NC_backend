@@ -1,0 +1,8 @@
+@ItsmNc.Api_HostAddress = https://localhost:7178
+
+# Проверяем запуск приложения через описание API.
+GET {{ItsmNc.Api_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+
