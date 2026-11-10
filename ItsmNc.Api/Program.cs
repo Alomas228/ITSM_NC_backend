@@ -1,5 +1,6 @@
 using ItsmNc.Api.Data;
 using ItsmNc.Api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Подключаем управление учётными записями и их хранение через EF Core.
 builder.Services.AddIdentityCore<ApplicationUser>()
+    .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
