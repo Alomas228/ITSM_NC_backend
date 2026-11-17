@@ -38,6 +38,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi().AllowAnonymous();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("../openapi/v1.json", "ITSM NC API v1");
+        options.DocumentTitle = "ITSM NC — проверка API";
+        options.ConfigObject.PersistAuthorization = false;
+        options.ConfigObject.ValidatorUrl = null;
+    });
 }
 
 app.UseHttpsRedirection();
