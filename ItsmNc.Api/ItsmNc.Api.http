@@ -6,3 +6,8 @@ Accept: application/json
 
 ###
 
+# Без JWT ожидается 401. Проверка валидного токена описана в README.
+GET {{ItsmNc.Api_HostAddress}}/api/auth/me
+Accept: application/json
+
+###

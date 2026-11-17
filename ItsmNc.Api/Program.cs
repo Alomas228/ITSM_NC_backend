@@ -1,3 +1,4 @@
+using ItsmNc.Api.Authentication;
 using ItsmNc.Api.Data;
 using ItsmNc.Api.Models;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Подключаем API-контроллеры и описание HTTP-контрактов.
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options => options.AddDocumentTransformer<JwtBearerDocumentTransformer>());
 
 // Настройки PostgreSQL проверяются при первом обращении к контексту БД.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -29,14 +30,20 @@ builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddKeycloakAuthentication(builder.Configuration);
+
 var app = builder.Build();
 
 // Документ OpenAPI доступен только в среде разработки.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi().AllowAnonymous();
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+public partial class Program;
