@@ -44,6 +44,15 @@ public sealed class JwtAuthenticationTests
         Assert.IsTrue(operation.GetProperty("security").EnumerateArray().Any(item => item.TryGetProperty("Bearer", out _)));
         Assert.IsTrue(operation.GetProperty("responses").TryGetProperty("401", out _));
         Assert.IsTrue(operation.GetProperty("responses").TryGetProperty("403", out _));
+        var oauth = document.GetProperty("components").GetProperty("securitySchemes").GetProperty("Keycloak");
+        Assert.AreEqual("oauth2", oauth.GetProperty("type").GetString());
+        var flow = oauth.GetProperty("flows").GetProperty("authorizationCode");
+        Assert.AreEqual(KeycloakApiFactory.Issuer + "/protocol/openid-connect/auth", flow.GetProperty("authorizationUrl").GetString());
+        Assert.AreEqual(KeycloakApiFactory.Issuer + "/protocol/openid-connect/token", flow.GetProperty("tokenUrl").GetString());
+        Assert.IsTrue(flow.GetProperty("scopes").TryGetProperty("openid", out _));
+        var requirements = operation.GetProperty("security").EnumerateArray().ToArray();
+        Assert.IsTrue(requirements.Any(item => item.TryGetProperty("Keycloak", out _)));
+        Assert.IsTrue(requirements.All(item => item.EnumerateObject().Count() == 1), "Bearer и OAuth должны быть альтернативами.");
     }
 
     [TestMethod]

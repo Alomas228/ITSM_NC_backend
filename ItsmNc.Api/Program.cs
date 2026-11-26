@@ -44,6 +44,14 @@ if (app.Environment.IsDevelopment())
         options.DocumentTitle = "ITSM NC — проверка API";
         options.ConfigObject.PersistAuthorization = false;
         options.ConfigObject.ValidatorUrl = null;
+        options.OAuthClientId(app.Configuration["Keycloak:ClientId"]!);
+        options.OAuthAppName("ITSM NC Swagger");
+        options.OAuthUsePkce();
+        options.OAuthScopes("openid", "profile", "email");
+        options.OAuthAdditionalQueryStringParams(new Dictionary<string, string>
+        {
+            ["prompt"] = "login"
+        });
     });
 }
 

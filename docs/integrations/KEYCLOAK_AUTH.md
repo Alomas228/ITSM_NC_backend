@@ -2,6 +2,16 @@
 
 Проверено 17 ноября 2026 года на реальном стенде. Backend принимает access token Keycloak; пароль, обновление токена и завершение SSO-сессии обрабатывает провайдер. Собственные маршруты логина, refresh и logout в API не нужны для выбранного публичного клиента.
 
+## Вход из Swagger
+
+В Development Swagger поддерживает готовый OAuth2 Authorization Code + PKCE S256. Публичный client_id student-service задан автоматически, client_secret не используется. Scopes openid/profile/email выбраны заранее. Вызов идёт через стандартное окно Keycloak; собственная форма пароля не создаётся. Ручной Bearer остаётся альтернативой: требования OpenAPI описаны как OR, серверная JWT-проверка одинакова для обоих вариантов.
+
+Открыть https://localhost:7178/swagger в обычном Edge/Chrome, нажать Authorize, выбрать раздел Keycloak и нажать Authorize внутри него. После входа выполнить GET /api/auth/me. Пошаговый сценарий: README. Для смены пользователя удалить авторизацию Swagger и войти снова: prompt=login запрашивает повторный вход. Logout в Swagger не завершает сессию Keycloak; автоматический refresh в Swagger не добавлен. Токены не сохраняются после перезагрузки страницы.
+
+С отдельного разрешения пользователя 17.11.2026 в общий клиент добавлены только callback https://localhost:7178/swagger/oauth2-redirect.html и web origin https://localhost:7178. Прежние адреса, mapper, настройки клиента и общие политики сохранены. Этот origin относится к CORS Keycloak для token endpoint, а не открывает CORS нашего Backend.
+
+Проверены HTTPS callback, конфигурация PKCE, CORS token endpoint с новым Origin и реальный обмен кода с новым redirect_uri: desk-admin получил 200 от Backend, alice — 403. Визуально проверено наличие схемы Keycloak и client_id в Swagger. Полный вход через всплывающее окно встроенного браузера не завершён: окно не открылось. На обычном браузере требуется контрольный ручной проход; при блокировке разрешить всплывающие окна для localhost. Вход в отдельном frontend по-прежнему не проверен.
+
 ## Настройки клиента
 
 Realm: `training`. Client ID: `student-service`.
@@ -13,8 +23,8 @@ Realm: `training`. Client ID: `student-service`.
 | PKCE | S256 |
 | Direct access grants | Off |
 | Implicit flow | Off |
-| Redirect URI стенда | `http://localhost:4300/auth/callback` |
-| Web origin клиента Keycloak | `http://localhost:4300` |
+| Redirect URI стенда | `http://localhost:4300/auth/callback` и `https://localhost:7178/swagger/oauth2-redirect.html` |
+| Web origin клиента Keycloak | `http://localhost:4300` и `https://localhost:7178` |
 | Post logout redirect URI | `http://localhost:4300/` |
 
 Адреса выше уже зарегистрированы в общем клиенте. Это параметры стенда, а не реализация frontend или настройка CORS нашего API. Backend работает на своих адресах из launchSettings.json. Для отдельного frontend origin и точный callback нужно согласовать; свободный доступ CORS не включён. При общем reverse proxy браузер обращается к API через тот же origin.
